@@ -25,4 +25,6 @@ def main():
 
 
 if __name__ == '__main__':
+    # disable warnings for "not able to verify SSL self-signed certificate"
+    # urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     main()
