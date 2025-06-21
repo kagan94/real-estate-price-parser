@@ -10,7 +10,8 @@ from .models import KvEeListingModel, City24ListingModel, Kinnisvara24ListingMod
 
 
 class Database:
-    def __init__(self, db_path: str = 'sqlite:///listings.db'):
+    def __init__(self):
+        db_path = 'sqlite:///real_estate_prices.db'
         self.session = create_engine_and_session(db_path)
 
     def save_kvee_listings(self, listings: List[KvEeListing]):
@@ -68,7 +69,7 @@ class Database:
         self.session.close()
 
 
-def create_engine_and_session(db_path='sqlite:///listings.db'):
+def create_engine_and_session(db_path: str):
     engine = create_engine(db_path)
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)

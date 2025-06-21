@@ -23,10 +23,16 @@ class KvEeListing:
 class KvEeParser:
     def fetch_page(self, start):
         url = KVEE_SEARCH_URL + str(start)
-        headers = {"User-Agent": "Mozilla/5.0"}
+        headers = {
+            'accept': 'application/json',
+            'accept-language': 'en-US,en;q=0.9,de;q=0.8,ru;q=0.7,et;q=0.6,zh-CN;q=0.5,zh;q=0.4,ko;q=0.3,lv;q=0.2,it;q=0.1,uk;q=0.1',
+            "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+            'referer': 'https://www.kv.ee/',
+            'origin': 'https://www.kv.ee',
+        }
         response = requests.get(url, headers=headers, verify=False)
         response.raise_for_status()
-        return response.text
+        return response.json().get('content')
 
     def extract_img_url(self, img_el):
         if not img_el:
