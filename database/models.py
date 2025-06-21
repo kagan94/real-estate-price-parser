@@ -8,6 +8,9 @@ class ListingModelBase:
     # NB! This is a mixin. It is not a model.
     id = Column(String, primary_key=True)
     address = Column(Text)
+    city = Column(String)
+    street_with_building = Column(Text)
+    apartment_number = Column(String)
     rooms = Column(Integer)
     area_m2 = Column(Float)
     price = Column(Integer)

@@ -5,7 +5,7 @@ from typing import List, Optional
 import requests
 from bs4 import BeautifulSoup
 
-from .common import ListingBase
+from .common import ListingBase, AddressComponents
 from config import KVEE_BASE_URL, KVEE_SEARCH_URL
 
 
@@ -84,14 +84,16 @@ class KvEeParser:
         if link and link.startswith('/'):
             link = KVEE_BASE_URL + link
 
+        address_components = self.parse_address_components(address)
+
         price_tag = art.find("div", attrs={"data-price": True})
-        price = price_tag['data-price'] if price_tag else None
+        price = int(price_tag['data-price']) if price_tag else None
 
         first_img = art.select_one("div.images img")
         img_url = self.extract_img_url(first_img)
 
         area_div = art.find('div', class_='area')
-        area_m2 = area_div.get_text(strip=True).replace('\u00a0m\u00b2', '') if area_div else None
+        area_m2 = float(area_div.get_text(strip=True).replace('\u00a0m\u00b2', '')) if area_div else None
         price_m2 = int(float(price) / float(area_m2)) if price and area_m2 else None
 
         object_important_note_p = art.find('p', class_='object-important-note')
@@ -105,7 +107,7 @@ class KvEeParser:
         year_built = self.parse_year_built(description)
 
         rooms_div = art.find('div', class_='rooms')
-        rooms = rooms_div.get_text(strip=True) if rooms_div else None
+        rooms = int(rooms_div.get_text(strip=True)) if rooms_div else None
 
         extra_data = object_data_by_id_map.get(obj_id, {})
         date_activated = extra_data.get('date_activated')
@@ -114,6 +116,9 @@ class KvEeParser:
         return KvEeListing(
             id=obj_id,
             address=address,
+            city=address_components.city,
+            street_with_building=address_components.street_with_building,
+            apartment_number=address_components.apartment_number,
             rooms=rooms,
             area_m2=area_m2,
             price=price,
@@ -129,6 +134,40 @@ class KvEeParser:
             year_built=year_built
         )
 
+    def parse_address_components(self, address: Optional[str]) -> AddressComponents:
+        """Parse address into street_with_building, apartment_number, and city."""
+        if not address:
+            return AddressComponents(None, None, None)
+
+        # Examples:
+        # "Tallinn, Haabersti, Pikaliiva, Pikaliiva tn 5-26"
+        # "Tallinn, Kesklinn, J. Kunderi tn 17"
+        # "Tallinn, Mustamäe, Uus-mustamäe, Aiandi 16/2-29"
+
+        parts = [part.strip() for part in address.split(',')]
+
+        if len(parts) < 2:
+            return AddressComponents(None, None, None)
+
+        city = parts[0]
+        street_with_building = parts[-1]
+        
+        if '-' not in street_with_building:
+            return AddressComponents(city, None, None)
+
+        apartment_number = None
+
+        # Handle cases like "Tasandi 5-2" or "Pikaliiva tn 5-26" or "Aiandi 16/2-29"
+        apartment_match = re.search(r'(\d+(?:/\d+)?)-(\d+)$', street_with_building)
+        if apartment_match:
+            building_part = apartment_match.group(1)  # "5" or "16/2"
+            apartment_number = apartment_match.group(2)  # "2" or "26" or "29"
+
+            # Remove apartment number from street_with_building, keep building number
+            street_with_building = street_with_building.replace(f'-{apartment_number}', '')
+
+        return AddressComponents(city, street_with_building, apartment_number)
+
     def extract_img_url(self, img_el):
         if not img_el:
             return None
@@ -136,29 +175,29 @@ class KvEeParser:
             return img_el.get("data-src")
         return img_el.get("src")
 
-    def parse_floor(self, description: Optional[str]) -> Optional[str]:
+    def parse_floor(self, description: Optional[str]) -> Optional[int]:
         if not description:
             return None
         floor_match = re.search(r'Этаж\s*(\d+)(?:/\d+)?', description)
         if floor_match:
-            return floor_match.group(1)
+            return int(floor_match.group(1))
         floor_match = re.search(r'(\d+)\.\s*этаж', description)
         if floor_match:
-            return floor_match.group(1)
+            return int(floor_match.group(1))
         return None
 
-    def parse_total_floors(self, description: Optional[str]) -> Optional[str]:
+    def parse_total_floors(self, description: Optional[str]) -> Optional[int]:
         if not description:
             return None
         floor_match = re.search(r'Этаж\s*\d+/(\d+)', description)
         if floor_match:
-            return floor_match.group(1)
+            return int(floor_match.group(1))
         return None
 
-    def parse_year_built(self, description: Optional[str]) -> Optional[str]:
+    def parse_year_built(self, description: Optional[str]) -> Optional[int]:
         if not description:
             return None
         year_match = re.search(r'год постройки\s*(\d{4})', description)
         if year_match:
-            return year_match.group(1)
+            return int(year_match.group(1))
         return None
