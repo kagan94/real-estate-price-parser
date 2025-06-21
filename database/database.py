@@ -65,7 +65,6 @@ class Database:
                 address=listing.address,
                 rooms=listing.rooms,
                 area_m2=listing.area_m2,
-                year_built=listing.year_built,
                 price=listing.price,
                 price_m2=listing.price_m2,
                 link=listing.link,

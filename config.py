@@ -11,3 +11,10 @@ CITY24_API_SEARCH_URL = "https://api.city24.ee/ru_RU/search/realties?address%5Bc
 # kinnisvara24.ee
 KINNISVARA24_BASE_URL = "https://kinnisvara24.ee/ru"
 KINNISVARA24_API_SEARCH_URL = "https://kinnisvara24.ee/search"
+KINNISVARA24_API_PAYLOAD = {
+    "deal_types": ["sale"],
+    "object_types": ["apartment"],
+    "addresses": [{"A1": "Harju maakond", "A2": "Tallinn"}],
+    "sort_by": "created_at",
+    "sort_order": "desc"
+}
