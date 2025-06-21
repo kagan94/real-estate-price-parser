@@ -30,6 +30,7 @@ class Database:
                 date_activated=listing.date_activated,
                 advertisement_level=listing.advertisement_level,
                 floor=listing.floor,
+                total_floors=listing.total_floors,
                 year_built=listing.year_built,
             )
             self.session.merge(db_listing)

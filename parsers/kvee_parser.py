@@ -23,6 +23,7 @@ class KvEeListing:
     date_activated: Optional[str]
     advertisement_level: Optional[int]
     floor: Optional[str]
+    total_floors: Optional[str]
     year_built: Optional[str]
 
 
@@ -46,7 +47,8 @@ class KvEeParser:
         return response.json()
 
     def parse_listings(self, response: dict) -> List[KvEeListing]:
-        object_data_by_id_map = {str(data['object_id']): data for data in response.get('objects')}
+        objects = response.get('objects') or []
+        object_data_by_id_map = {str(data['object_id']): data for data in objects}
 
         html = response.get('content') or ''
         soup = BeautifulSoup(html, 'html.parser')
@@ -90,6 +92,7 @@ class KvEeParser:
         description = desc_p.get_text(strip=True) if desc_p else None
 
         floor = self.parse_floor(description)
+        total_floors = self.parse_total_floors(description)
         year_built = self.parse_year_built(description)
 
         rooms_div = art.find('div', class_='rooms')
@@ -113,6 +116,7 @@ class KvEeParser:
             date_activated=date_activated,
             advertisement_level=advertisement_level,
             floor=floor,
+            total_floors=total_floors,
             year_built=year_built
         )
 
@@ -126,10 +130,18 @@ class KvEeParser:
     def parse_floor(self, description: Optional[str]) -> Optional[str]:
         if not description:
             return None
-        floor_match = re.search(r'Этаж\s*(\d+(?:/\d+)?)', description)
+        floor_match = re.search(r'Этаж\s*(\d+)(?:/\d+)?', description)
         if floor_match:
             return floor_match.group(1)
         floor_match = re.search(r'(\d+)\.\s*этаж', description)
+        if floor_match:
+            return floor_match.group(1)
+        return None
+
+    def parse_total_floors(self, description: Optional[str]) -> Optional[str]:
+        if not description:
+            return None
+        floor_match = re.search(r'Этаж\s*\d+/(\d+)', description)
         if floor_match:
             return floor_match.group(1)
         return None

@@ -20,6 +20,7 @@ class KvEeListingModel(Base):
     date_activated = Column(String)
     advertisement_level = Column(Integer)
     floor = Column(String)
+    total_floors = Column(String)
     year_built = Column(String)
 
 

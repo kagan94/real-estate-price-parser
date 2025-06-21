@@ -1,6 +1,6 @@
 # kv.ee
 KVEE_BASE_URL = "https://www.kv.ee"
-KVEE_SEARCH_URL = "https://www.kv.ee/ru/search?orderby=ob&deal_type=1&county=1&parish=1061&start="
+KVEE_SEARCH_URL = "https://www.kv.ee/ru/search?orderby=cawl&deal_type=1&county=1&parish=1061&start="
 
 # city24.ee
 CITY24_BASE_URL = "https://www.city24.ee/ru"
