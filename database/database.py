@@ -48,7 +48,6 @@ class Database:
                 link=listing.link,
                 img_url=listing.img_url,
                 object_important_note=listing.object_important_note,
-                description=listing.description,
                 date_published=listing.date_published,
                 floor=listing.floor,
                 total_floors=listing.total_floors,
@@ -71,7 +70,6 @@ class Database:
                 price_m2=listing.price_m2,
                 link=listing.link,
                 img_url=listing.img_url,
-                description=listing.description,
                 created_at=listing.created_at
             )
             self.session.merge(db_listing)

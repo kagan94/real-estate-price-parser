@@ -10,7 +10,6 @@ from config import KINNISVARA24_API_SEARCH_URL
 @dataclass
 class Kinnisvara24Listing(ListingBase):
     year_built: Optional[str]
-    description: Optional[str]
     created_at: Optional[str]
 
 
@@ -55,7 +54,6 @@ class Kinnisvara24Parser:
                 link=link,
                 img_url=img_url,
                 year_built=None,
-                description=None,
                 created_at=created_at,
             ))
         return results

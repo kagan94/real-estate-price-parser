@@ -10,7 +10,6 @@ from .common import ListingBase
 @dataclass
 class City24Listing(ListingBase):
     object_important_note: Optional[str]
-    description: Optional[str]
     date_published: Optional[str]
     floor: Optional[str]
     total_floors: Optional[str]
@@ -69,7 +68,6 @@ class City24Parser:
             link=link,
             img_url=img_url,
             object_important_note=object_important_note,
-            description=None,
             date_published=apartment.get('date_published'),
             floor=attributes.get('FLOOR'),
             total_floors=attributes.get('TOTAL_FLOORS'),
