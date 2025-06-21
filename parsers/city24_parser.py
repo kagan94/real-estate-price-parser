@@ -3,7 +3,7 @@ from typing import List, Optional
 
 import requests
 
-from .config import CITY24_BASE_URL, CITY24_API_SEARCH_URL
+from config import CITY24_BASE_URL, CITY24_API_SEARCH_URL
 from .common import ListingBase
 
 

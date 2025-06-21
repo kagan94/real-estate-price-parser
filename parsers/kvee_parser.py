@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from .common import ListingBase
-from .config import KVEE_BASE_URL, KVEE_SEARCH_URL
+from config import KVEE_BASE_URL, KVEE_SEARCH_URL
 
 
 @dataclass

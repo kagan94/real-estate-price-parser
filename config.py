@@ -1,3 +1,5 @@
+DB_PATH = "sqlite:///real_estate_prices.db"
+
 # kv.ee
 KVEE_BASE_URL = "https://www.kv.ee"
 KVEE_SEARCH_URL = "https://www.kv.ee/ru/search?orderby=cawl&deal_type=1&county=1&parish=1061&start="

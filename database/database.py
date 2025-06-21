@@ -3,6 +3,7 @@ from typing import List
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from config import DB_PATH
 from parsers.city24_parser import City24Listing
 from parsers.kinnisvara24_parser import Kinnisvara24Listing
 from parsers.kvee_parser import KvEeListing
@@ -11,8 +12,7 @@ from .models import KvEeListingModel, City24ListingModel, Kinnisvara24ListingMod
 
 class Database:
     def __init__(self):
-        db_path = 'sqlite:///real_estate_prices.db'
-        self.session = create_engine_and_session(db_path)
+        self.session = create_engine_and_session(DB_PATH)
 
     def save_kvee_listings(self, listings: List[KvEeListing]):
         for listing in listings:

@@ -4,7 +4,7 @@ from typing import List, Optional
 import requests
 
 from .common import ListingBase
-from .config import KINNISVARA24_API_SEARCH_URL
+from config import KINNISVARA24_API_SEARCH_URL
 
 
 @dataclass
