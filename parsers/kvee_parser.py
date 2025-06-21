@@ -19,6 +19,8 @@ class KvEeListing:
     first_img_url: Optional[str]
     object_important_note: Optional[str]
     description: Optional[str]
+    date_activated: Optional[str]
+    advertisement_level: Optional[int]
 
 
 class KvEeParser:
@@ -33,7 +35,7 @@ class KvEeParser:
         }
         response = requests.get(url, headers=headers, verify=False)
         response.raise_for_status()
-        return response.json().get('content')
+        return response.json()
 
     def extract_img_url(self, img_el):
         if not img_el:
@@ -42,9 +44,13 @@ class KvEeParser:
             return img_el.get("data-src")
         return img_el.get("src")
 
-    def parse_listings(self, html: str) -> List[KvEeListing]:
+    def parse_listings(self, response: dict) -> List[KvEeListing]:
+        object_data_by_id_map = {str(data['object_id']): data for data in response.get('objects')}
+
+        html = response.get('content')
         soup = BeautifulSoup(html, 'html.parser')
         articles = soup.find_all('article', attrs={'data-object-id': True})
+
         results = []
 
         for art in articles:
@@ -81,6 +87,10 @@ class KvEeParser:
             rooms_div = art.find('div', class_='rooms')
             rooms = rooms_div.get_text(strip=True) if rooms_div else None
 
+            extra_data = object_data_by_id_map.get(obj_id, {})
+            date_activated = extra_data.get('date_activated')
+            advertisement_level = extra_data.get('advertisment_level')
+
             results.append(KvEeListing(
                 id=obj_id,
                 address=address,
@@ -92,6 +102,8 @@ class KvEeParser:
                 first_img_url=first_img_url,
                 object_important_note=object_important_note,
                 description=description,
+                date_activated=date_activated,
+                advertisement_level=advertisement_level
             ))
         return results
 

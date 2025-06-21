@@ -17,6 +17,8 @@ class KvEeListingModel(Base):
     first_img_url = Column(Text)
     object_important_note = Column(Text)
     description = Column(Text)
+    date_activated = Column(String)
+    advertisement_level = Column(Integer)
 
 
 class City24ListingModel(Base):

@@ -26,7 +26,9 @@ class Database:
                 link=listing.link,
                 first_img_url=listing.first_img_url,
                 object_important_note=listing.object_important_note,
-                description=listing.description
+                description=listing.description,
+                date_activated=listing.date_activated,
+                advertisement_level=listing.advertisement_level,
             )
             self.session.merge(db_listing)
         self.session.commit()
