@@ -5,8 +5,8 @@ from typing import List, Optional
 import requests
 from bs4 import BeautifulSoup
 
-from .common import ListingBase, AddressComponents
 from config import KVEE_BASE_URL, KVEE_SEARCH_URL
+from .common import ListingBase, AddressComponents
 
 
 @dataclass
@@ -87,13 +87,15 @@ class KvEeParser:
         address_components = self.parse_address_components(address)
 
         price_tag = art.find("div", attrs={"data-price": True})
-        price = int(price_tag['data-price']) if price_tag else None
+        price = price_tag['data-price'] if price_tag else None
+        price = int(float(price)) if price else None
 
         first_img = art.select_one("div.images img")
         img_url = self.extract_img_url(first_img)
 
         area_div = art.find('div', class_='area')
-        area_m2 = float(area_div.get_text(strip=True).replace('\u00a0m\u00b2', '')) if area_div else None
+        area_m2 = area_div.get_text(strip=True).replace('\u00a0m\u00b2', '') if area_div else None
+        area_m2 = float(area_m2) if area_m2 else None
         price_m2 = int(float(price) / float(area_m2)) if price and area_m2 else None
 
         object_important_note_p = art.find('p', class_='object-important-note')
@@ -107,7 +109,8 @@ class KvEeParser:
         year_built = self.parse_year_built(description)
 
         rooms_div = art.find('div', class_='rooms')
-        rooms = int(rooms_div.get_text(strip=True)) if rooms_div else None
+        rooms = rooms_div.get_text(strip=True) if rooms_div else None
+        rooms = int(rooms) if rooms else None
 
         extra_data = object_data_by_id_map.get(obj_id, {})
         date_activated = extra_data.get('date_activated')
@@ -151,7 +154,7 @@ class KvEeParser:
 
         city = parts[0]
         street_with_building = parts[-1]
-        
+
         if '-' not in street_with_building:
             return AddressComponents(city, None, None)
 
