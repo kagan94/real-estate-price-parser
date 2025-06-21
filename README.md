@@ -13,13 +13,13 @@ Application is parsing and storing real estate prices from main Estonian real es
 ## Usage
 
 ```
-python real_estate_parser_cli.py [portal] [options]
+python real_estate_parser_cli.py --portal [PORTAL_TYPE]
 ```
 
 Example:
 
 ```
-python real_estate_parser_cli.py kvee
-python real_estate_parser_cli.py city24
-python real_estate_parser_cli.py kinnisvara24
+python real_estate_parser_cli.py --portal kvee
+python real_estate_parser_cli.py --portal city24
+python real_estate_parser_cli.py --portal kinnisvara24
 ```
