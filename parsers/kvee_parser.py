@@ -29,9 +29,25 @@ class KvEeListing:
 
 class KvEeParser:
     def parse(self) -> List[KvEeListing]:
-        offset = 0
-        html = self.fetch_page(offset)
-        return self.parse_listings(html)
+        print(f"Fetching page 0 (offset=0) to determine total count...")
+        first_response = self.fetch_page(start=0)
+
+        total_items = first_response['countsOverall']
+        items_per_page = len(first_response['objects'])
+        total_pages = (total_items + items_per_page - 1) // items_per_page
+        print(f"Total listings to fetch: {total_items}, total pages: {total_pages}, items per page: {items_per_page}")
+
+        all_results: List[KvEeListing] = []
+        all_results.extend(self.parse_listings(first_response))
+        current_page = 1
+
+        for offset in range(items_per_page, total_items, items_per_page):
+            current_page += 1
+            print(f"Fetching page {current_page} of {total_pages} (offset={offset})...")
+            response = self.fetch_page(start=offset)
+            all_results.extend(self.parse_listings(response))
+
+        return all_results
 
     def fetch_page(self, start):
         url = KVEE_SEARCH_URL + str(start)
