@@ -17,6 +17,7 @@ class KvEeListing:
     price_m2: Optional[str]
     link: Optional[str]
     first_img_url: Optional[str]
+    object_important_note: Optional[str]
     description: Optional[str]
 
 
@@ -71,6 +72,9 @@ class KvEeParser:
             area_m2 = area_div.get_text(strip=True).replace('\u00a0m\u00b2', '') if area_div else None
             price_m2 = int(float(price) / float(area_m2)) if price and area_m2 else None
 
+            object_important_note_p = art.find('p', class_='object-important-note')
+            object_important_note = object_important_note_p.get_text(strip=True) if object_important_note_p else None
+
             desc_p = art.find('p', class_='object-excerpt')
             description = desc_p.get_text(strip=True) if desc_p else None
 
@@ -86,6 +90,7 @@ class KvEeParser:
                 price_m2=str(price_m2) if price_m2 is not None else None,
                 link=link,
                 first_img_url=first_img_url,
+                object_important_note=object_important_note,
                 description=description,
             ))
         return results

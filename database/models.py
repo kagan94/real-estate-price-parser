@@ -15,6 +15,7 @@ class KvEeListingModel(Base):
     price_m2 = Column(String)
     link = Column(Text)
     first_img_url = Column(Text)
+    object_important_note = Column(Text)
     description = Column(Text)
 
 
