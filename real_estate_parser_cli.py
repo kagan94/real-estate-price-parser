@@ -1,8 +1,9 @@
 import argparse
-from parsers.kvee_parser import KvEeParser
+
+from database import Database
 from parsers.city24_parser import City24Parser
 from parsers.kinnisvara24_parser import Kinnisvara24Parser
-from db import Database
+from parsers.kvee_parser import KvEeParser
 
 
 def main():
