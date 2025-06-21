@@ -15,9 +15,9 @@ class KvEeListing(ListingBase):
     description: Optional[str]
     date_activated: Optional[str]
     advertisement_level: Optional[int]
-    floor: Optional[str]
-    total_floors: Optional[str]
-    year_built: Optional[str]
+    floor: Optional[int]
+    total_floors: Optional[int]
+    year_built: Optional[int]
 
 
 class KvEeParser:
@@ -117,7 +117,7 @@ class KvEeParser:
             rooms=rooms,
             area_m2=area_m2,
             price=price,
-            price_m2=str(price_m2) if price_m2 is not None else None,
+            price_m2=price_m2,
             link=link,
             img_url=img_url,
             object_important_note=object_important_note,

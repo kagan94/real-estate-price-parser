@@ -41,6 +41,8 @@ class City24ListingModel(Base):
     floor = Column(Text)
     total_floors = Column(Text)
     year_built = Column(String)
+    latitude = Column(String)
+    longitude = Column(String)
 
 
 class Kinnisvara24ListingModel(Base):

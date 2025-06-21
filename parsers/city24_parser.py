@@ -14,7 +14,9 @@ class City24Listing(ListingBase):
     date_published: Optional[str]
     floor: Optional[str]
     total_floors: Optional[str]
-    year_built: Optional[str]
+    year_built: Optional[int]
+    latitude: Optional[float]
+    longitude: Optional[float]
 
 class City24Parser:
     def parse(self) -> List[City24Listing]:
@@ -46,19 +48,13 @@ class City24Parser:
         obj_id = apartment.get('friendly_id')
         link = f"{CITY24_BASE_URL}/real-estate/skip/skip/{obj_id}"
         address = self.build_address(apartment['address']) if apartment.get('address') else None
+
         price = int(apartment.get('price').replace('.00', '')) if apartment.get('price') else None
         price_m2 = int(apartment.get('price_per_unit')) if apartment.get('price_per_unit') else None
-        area_m2 = apartment.get('property_size')
         img_url = apartment['main_image']['url'].replace('{fmt:em}', '24') \
             if apartment.get('main_image') and apartment['main_image'].get('url') else None
-        rooms = apartment.get('room_count')
-        year_built = apartment.get('year_built')
-        date_published = apartment.get('date_published')
 
         attributes = apartment.get('attributes', {})
-        floor = attributes.get('FLOOR')
-        total_floors = attributes.get('TOTAL_FLOORS')
-
         slogans = apartment.get('slogans')
         object_important_note = slogans['ru_RU'].get('slogan') if slogans and slogans.get('ru_RU') else None
         object_important_note = slogans['et_EE'].get('slogan') if not object_important_note and slogans and slogans.get('et_EE') else None
@@ -66,18 +62,20 @@ class City24Parser:
         listing = City24Listing(
             id=obj_id,
             address=address,
-            rooms=rooms,
-            area_m2=area_m2,
+            rooms=apartment.get('room_count'),
+            area_m2=apartment.get('property_size'),
             price=price,
             price_m2=price_m2,
             link=link,
             img_url=img_url,
-            year_built=year_built,
             object_important_note=object_important_note,
             description=None,
-            date_published=date_published,
-            floor=floor,
-            total_floors=total_floors,
+            date_published=apartment.get('date_published'),
+            floor=attributes.get('FLOOR'),
+            total_floors=attributes.get('TOTAL_FLOORS'),
+            year_built=apartment.get('year_built'),
+            latitude=apartment.get('latitude'),
+            longitude=apartment.get('longitude'),
         )
         print(listing)
         return listing

@@ -53,6 +53,8 @@ class Database:
                 floor=listing.floor,
                 total_floors=listing.total_floors,
                 year_built=listing.year_built,
+                latitude=listing.latitude,
+                longitude=listing.longitude,
             )
             self.session.merge(db_listing)
         self.session.commit()
