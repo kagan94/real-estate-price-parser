@@ -11,3 +11,4 @@ class ListingBase:
     price: Optional[int]
     price_m2: Optional[int]
     link: Optional[str]
+    img_url: Optional[str]

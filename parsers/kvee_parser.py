@@ -11,7 +11,6 @@ from config import KVEE_BASE_URL, KVEE_SEARCH_URL
 
 @dataclass
 class KvEeListing(ListingBase):
-    first_img_url: Optional[str]
     object_important_note: Optional[str]
     description: Optional[str]
     date_activated: Optional[str]
@@ -89,7 +88,7 @@ class KvEeParser:
         price = price_tag['data-price'] if price_tag else None
 
         first_img = art.select_one("div.images img")
-        first_img_url = self.extract_img_url(first_img)
+        img_url = self.extract_img_url(first_img)
 
         area_div = art.find('div', class_='area')
         area_m2 = area_div.get_text(strip=True).replace('\u00a0m\u00b2', '') if area_div else None
@@ -120,7 +119,7 @@ class KvEeParser:
             price=price,
             price_m2=str(price_m2) if price_m2 is not None else None,
             link=link,
-            first_img_url=first_img_url,
+            img_url=img_url,
             object_important_note=object_important_note,
             description=description,
             date_activated=date_activated,

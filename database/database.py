@@ -24,7 +24,7 @@ class Database:
                 price=listing.price,
                 price_m2=listing.price_m2,
                 link=listing.link,
-                first_img_url=listing.first_img_url,
+                img_url=listing.img_url,
                 object_important_note=listing.object_important_note,
                 description=listing.description,
                 date_activated=listing.date_activated,
@@ -46,7 +46,7 @@ class Database:
                 price=listing.price,
                 price_m2=listing.price_m2,
                 link=listing.link,
-                main_img_url=listing.main_img_url,
+                img_url=listing.img_url,
                 object_important_note=listing.object_important_note,
                 description=listing.description,
                 date_published=listing.date_published,
@@ -68,7 +68,7 @@ class Database:
                 price=listing.price,
                 price_m2=listing.price_m2,
                 link=listing.link,
-                main_img_url=listing.main_img_url,
+                img_url=listing.img_url,
                 description=listing.description,
                 created_at=listing.created_at
             )

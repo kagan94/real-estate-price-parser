@@ -9,7 +9,6 @@ from .common import ListingBase
 
 @dataclass
 class City24Listing(ListingBase):
-    main_img_url: Optional[str]
     object_important_note: Optional[str]
     description: Optional[str]
     date_published: Optional[str]
@@ -50,7 +49,7 @@ class City24Parser:
         price = int(apartment.get('price').replace('.00', '')) if apartment.get('price') else None
         price_m2 = int(apartment.get('price_per_unit')) if apartment.get('price_per_unit') else None
         area_m2 = apartment.get('property_size')
-        main_img_url = apartment['main_image']['url'].replace('{fmt:em}', '24') \
+        img_url = apartment['main_image']['url'].replace('{fmt:em}', '24') \
             if apartment.get('main_image') and apartment['main_image'].get('url') else None
         rooms = apartment.get('room_count')
         year_built = apartment.get('year_built')
@@ -72,7 +71,7 @@ class City24Parser:
             price=price,
             price_m2=price_m2,
             link=link,
-            main_img_url=main_img_url,
+            img_url=img_url,
             year_built=year_built,
             object_important_note=object_important_note,
             description=None,

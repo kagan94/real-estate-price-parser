@@ -10,7 +10,6 @@ from config import KINNISVARA24_API_SEARCH_URL
 @dataclass
 class Kinnisvara24Listing(ListingBase):
     year_built: Optional[str]
-    main_img_url: Optional[str]
     description: Optional[str]
     created_at: Optional[str]
 
@@ -41,7 +40,7 @@ class Kinnisvara24Parser:
             price = apartment.get('hind')
             price_m2 = apartment.get('price_per_m2')
             area_m2 = apartment.get('area')
-            main_img_url = apartment['images'][0].get('url') \
+            img_url = apartment['images'][0].get('url') \
                 if apartment.get('images') and len(apartment['images']) > 0 else None
             rooms = apartment.get('rooms')
             created_at = apartment.get('created_at')
@@ -54,7 +53,7 @@ class Kinnisvara24Parser:
                 price=price,
                 price_m2=price_m2,
                 link=link,
-                main_img_url=main_img_url,
+                img_url=img_url,
                 year_built=None,
                 description=None,
                 created_at=created_at,
