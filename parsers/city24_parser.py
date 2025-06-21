@@ -9,11 +9,6 @@ from .common import ListingBase
 
 @dataclass
 class City24Listing(ListingBase):
-    rooms: Optional[str]
-    area_m2: Optional[str]
-    price: Optional[int]
-    price_m2: Optional[int]
-    link: Optional[str]
     main_img_url: Optional[str]
     object_important_note: Optional[str]
     description: Optional[str]

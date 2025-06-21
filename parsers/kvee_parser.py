@@ -11,11 +11,6 @@ from .config import KVEE_BASE_URL, KVEE_SEARCH_URL
 
 @dataclass
 class KvEeListing(ListingBase):
-    rooms: Optional[str]
-    area_m2: Optional[str]
-    price: Optional[str]
-    price_m2: Optional[str]
-    link: Optional[str]
     first_img_url: Optional[str]
     object_important_note: Optional[str]
     description: Optional[str]

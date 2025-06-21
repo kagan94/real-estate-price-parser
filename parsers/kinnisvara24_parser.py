@@ -9,12 +9,7 @@ from .config import KINNISVARA24_API_SEARCH_URL
 
 @dataclass
 class Kinnisvara24Listing(ListingBase):
-    rooms: Optional[str]
-    area_m2: Optional[str]
     year_built: Optional[str]
-    price: Optional[int]
-    price_m2: Optional[int]
-    link: Optional[str]
     main_img_url: Optional[str]
     description: Optional[str]
     created_at: Optional[str]
