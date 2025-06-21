@@ -143,9 +143,9 @@ class KvEeParser:
             return AddressComponents(None, None, None)
 
         # Examples:
-        # "Tallinn, Haabersti, Pikaliiva, Pikaliiva tn 5-26"
-        # "Tallinn, Kesklinn, J. Kunderi tn 17"
-        # "Tallinn, Mustamäe, Uus-mustamäe, Aiandi 16/2-29"
+        # "Tallinn, Lasnamäe, Punane tn 21-1"
+        # "Tallinn, Lasnamäe, Varraku peatus, Punane tn 65"
+        # "Tallinn, Lasnamäe, Punane tn 27"
 
         parts = [part.strip() for part in address.split(',')]
 
@@ -155,19 +155,21 @@ class KvEeParser:
         city = parts[0]
         street_with_building = parts[-1]
 
-        if '-' not in street_with_building:
-            return AddressComponents(city, None, None)
-
+        # Handle apartment numbers with space before dash (e.g., "Punane tn 21-1")
         apartment_number = None
-
-        # Handle cases like "Tasandi 5-2" or "Pikaliiva tn 5-26" or "Aiandi 16/2-29"
-        apartment_match = re.search(r'(\d+(?:/\d+)?)-(\d+)$', street_with_building)
-        if apartment_match:
-            building_part = apartment_match.group(1)  # "5" or "16/2"
-            apartment_number = apartment_match.group(2)  # "2" or "26" or "29"
-
-            # Remove apartment number, keep building number only
-            street_with_building = street_with_building.replace(f'-{apartment_number}', '')
+        # First, try dash pattern (e.g., '21-1', '26b-15')
+        dash_match = re.search(r'([A-Za-z0-9]+(?:/\d+)?)\s*-(\d+)$', street_with_building)
+        if dash_match:
+            building_part = dash_match.group(1)
+            apartment_number = dash_match.group(2)
+            street_with_building = street_with_building.replace(f' {building_part}-{apartment_number}', f' {building_part}')
+        else:
+            # Only check for slash pattern if dash pattern did not match
+            slash_match = re.search(r'([A-Za-z0-9]+)/(\d+)$', street_with_building)
+            if slash_match:
+                building_part = slash_match.group(1)
+                apartment_number = slash_match.group(2)
+                street_with_building = street_with_building.replace(f'/{apartment_number}', '')
 
         return AddressComponents(city, street_with_building, apartment_number)
 
