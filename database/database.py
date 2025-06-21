@@ -29,6 +29,8 @@ class Database:
                 description=listing.description,
                 date_activated=listing.date_activated,
                 advertisement_level=listing.advertisement_level,
+                floor=listing.floor,
+                year_built=listing.year_built,
             )
             self.session.merge(db_listing)
         self.session.commit()

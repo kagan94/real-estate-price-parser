@@ -19,6 +19,8 @@ class KvEeListingModel(Base):
     description = Column(Text)
     date_activated = Column(String)
     advertisement_level = Column(Integer)
+    floor = Column(String)
+    year_built = Column(String)
 
 
 class City24ListingModel(Base):

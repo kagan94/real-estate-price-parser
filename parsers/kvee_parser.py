@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass
 from typing import List, Optional
 
@@ -21,9 +22,16 @@ class KvEeListing:
     description: Optional[str]
     date_activated: Optional[str]
     advertisement_level: Optional[int]
+    floor: Optional[str]
+    year_built: Optional[str]
 
 
 class KvEeParser:
+    def parse(self) -> List[KvEeListing]:
+        offset = 0
+        html = self.fetch_page(offset)
+        return self.parse_listings(html)
+
     def fetch_page(self, start):
         url = KVEE_SEARCH_URL + str(start)
         headers = {
@@ -37,17 +45,10 @@ class KvEeParser:
         response.raise_for_status()
         return response.json()
 
-    def extract_img_url(self, img_el):
-        if not img_el:
-            return None
-        if img_el.get("data-src"):
-            return img_el.get("data-src")
-        return img_el.get("src")
-
     def parse_listings(self, response: dict) -> List[KvEeListing]:
         object_data_by_id_map = {str(data['object_id']): data for data in response.get('objects')}
 
-        html = response.get('content')
+        html = response.get('content') or ''
         soup = BeautifulSoup(html, 'html.parser')
         articles = soup.find_all('article', attrs={'data-object-id': True})
 
@@ -84,6 +85,9 @@ class KvEeParser:
             desc_p = art.find('p', class_='object-excerpt')
             description = desc_p.get_text(strip=True) if desc_p else None
 
+            floor = self.parse_floor(description)
+            year_built = self.parse_year_built(description)
+
             rooms_div = art.find('div', class_='rooms')
             rooms = rooms_div.get_text(strip=True) if rooms_div else None
 
@@ -103,11 +107,34 @@ class KvEeParser:
                 object_important_note=object_important_note,
                 description=description,
                 date_activated=date_activated,
-                advertisement_level=advertisement_level
+                advertisement_level=advertisement_level,
+                floor=floor,
+                year_built=year_built
             ))
         return results
 
-    def parse(self) -> List[KvEeListing]:
-        offset = 0
-        html = self.fetch_page(offset)
-        return self.parse_listings(html)
+    def extract_img_url(self, img_el):
+        if not img_el:
+            return None
+        if img_el.get("data-src"):
+            return img_el.get("data-src")
+        return img_el.get("src")
+
+    def parse_floor(self, description: Optional[str]) -> Optional[str]:
+        if not description:
+            return None
+        floor_match = re.search(r'Этаж\s*(\d+(?:/\d+)?)', description)
+        if floor_match:
+            return floor_match.group(1)
+        floor_match = re.search(r'(\d+)\.\s*этаж', description)
+        if floor_match:
+            return floor_match.group(1)
+        return None
+
+    def parse_year_built(self, description: Optional[str]) -> Optional[str]:
+        if not description:
+            return None
+        year_match = re.search(r'год постройки\s*(\d{4})', description)
+        if year_match:
+            return year_match.group(1)
+        return None
