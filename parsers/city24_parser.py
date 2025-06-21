@@ -109,6 +109,7 @@ class City24Parser:
         # "Tallinn, Põhja-Tallinna linnaosa, Kalaranna tn-8/8"
         # "Tallinn, Kesklinna linnaosa, Pirita tee-26b/4"
         # "Tallinn, Põhja-Tallinna linnaosa, Uus-Maleva tn-3"
+        # "Tallinn, Kesklinna linnaosa, Tiiu tn-12/3"
 
         parts = [part.strip() for part in address.split(',')]
         
@@ -120,7 +121,7 @@ class City24Parser:
 
         # Only normalize dashes that separate street from building number
         # Pattern: street name followed by dash and building number
-        street_with_building = re.sub(r'-(\d+)$', r' \1', street_with_building)
+        street_with_building = re.sub(r'-(\d+[A-Za-z]?(?:/\d+)?)$', r' \1', street_with_building)
 
         if '/' not in street_with_building:
             return AddressComponents(city, street_with_building, None)
