@@ -31,12 +31,16 @@ class City24ListingModel(Base):
     address = Column(Text)
     rooms = Column(String)
     area_m2 = Column(String)
-    year_built = Column(String)
     price = Column(Integer)
     price_m2 = Column(Integer)
     link = Column(Text)
     main_img_url = Column(Text)
+    object_important_note = Column(Text)
     description = Column(Text)
+    date_published = Column(Text)
+    floor = Column(Text)
+    total_floors = Column(Text)
+    year_built = Column(String)
 
 
 class Kinnisvara24ListingModel(Base):

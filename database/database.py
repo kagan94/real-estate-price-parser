@@ -43,12 +43,16 @@ class Database:
                 address=listing.address,
                 rooms=listing.rooms,
                 area_m2=listing.area_m2,
-                year_built=listing.year_built,
                 price=listing.price,
                 price_m2=listing.price_m2,
                 link=listing.link,
                 main_img_url=listing.main_img_url,
-                description=listing.description
+                object_important_note=listing.object_important_note,
+                description=listing.description,
+                date_published=listing.date_published,
+                floor=listing.floor,
+                total_floors=listing.total_floors,
+                year_built=listing.year_built,
             )
             self.session.merge(db_listing)
         self.session.commit()

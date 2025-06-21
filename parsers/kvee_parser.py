@@ -5,13 +5,12 @@ from typing import List, Optional
 import requests
 from bs4 import BeautifulSoup
 
+from .common import ListingBase
 from .config import KVEE_BASE_URL, KVEE_SEARCH_URL
 
 
 @dataclass
-class KvEeListing:
-    id: str
-    address: Optional[str]
+class KvEeListing(ListingBase):
     rooms: Optional[str]
     area_m2: Optional[str]
     price: Optional[str]

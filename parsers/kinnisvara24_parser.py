@@ -3,13 +3,12 @@ from typing import List, Optional
 
 import requests
 
+from .common import ListingBase
 from .config import KINNISVARA24_API_SEARCH_URL
 
 
 @dataclass
-class Kinnisvara24Listing:
-    id: str
-    address: Optional[str]
+class Kinnisvara24Listing(ListingBase):
     rooms: Optional[str]
     area_m2: Optional[str]
     year_built: Optional[str]
