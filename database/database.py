@@ -44,6 +44,9 @@ class Database:
             db_listing = City24ListingModel(
                 id=listing.id,
                 address=listing.address,
+                city=listing.city,
+                street_with_building=listing.street_with_building,
+                apartment_number=listing.apartment_number,
                 rooms=listing.rooms,
                 area_m2=listing.area_m2,
                 price=listing.price,

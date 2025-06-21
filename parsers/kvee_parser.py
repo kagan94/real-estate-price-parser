@@ -163,7 +163,7 @@ class KvEeParser:
             building_part = apartment_match.group(1)  # "5" or "16/2"
             apartment_number = apartment_match.group(2)  # "2" or "26" or "29"
 
-            # Remove apartment number from street_with_building, keep building number
+            # Remove apartment number, keep building number only
             street_with_building = street_with_building.replace(f'-{apartment_number}', '')
 
         return AddressComponents(city, street_with_building, apartment_number)
