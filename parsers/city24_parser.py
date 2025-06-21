@@ -19,10 +19,22 @@ class City24Listing(ListingBase):
 
 class City24Parser:
     def parse(self) -> List[City24Listing]:
-        response_json = self.fetch_data(limit=10, page=1)
-        return self.parse_listings(response_json)
+        page, limit = 1, 1000
+        results: List[City24Listing] = []
 
-    def fetch_data(self, limit, page):
+        while True:
+            print(f"Fetching page {page}, limit={limit}")
+            response_json = self.fetch_data_as_json(limit=limit, page=page)
+            listings = self.parse_listings(response_json)
+            results.extend(listings)
+            print(f"Parsed {len(listings)} total listings for page {page}")
+
+            if len(listings) < limit:
+                break
+            page += 1
+        return results
+
+    def fetch_data_as_json(self, limit, page):
         url = CITY24_API_SEARCH_URL.format(limit=limit, page=page)
         headers = {
             'accept': 'application/json',
@@ -48,7 +60,7 @@ class City24Parser:
         link = f"{CITY24_BASE_URL}/real-estate/skip/skip/{obj_id}"
         address = self.build_address(apartment['address']) if apartment.get('address') else None
 
-        price = int(apartment.get('price').replace('.00', '')) if apartment.get('price') else None
+        price = int(float(apartment.get('price'))) if apartment.get('price') else None
         price_m2 = int(apartment.get('price_per_unit')) if apartment.get('price_per_unit') else None
         img_url = apartment['main_image']['url'].replace('{fmt:em}', '24') \
             if apartment.get('main_image') and apartment['main_image'].get('url') else None
@@ -75,7 +87,7 @@ class City24Parser:
             latitude=apartment.get('latitude'),
             longitude=apartment.get('longitude'),
         )
-        print(listing)
+        # print(listing)
         return listing
 
     def build_address(self, address: dict):
