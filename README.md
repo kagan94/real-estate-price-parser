@@ -46,6 +46,23 @@ python run_tests.py
 ```
 
 
+# Data
+
+## DB model
+![img.png](documentation/db_model.png)
+
+
+## Data example
+
+### kv.ee
+![img.png](documentation/data/kvee.png)
+
+### city24.ee
+![img.png](documentation/data/city24.png)
+
+### kinnisvara24.ee
+![img.png](documentation/data/kinnisvara24.png)
+
 # Data validation (for Tallinn apartment prices only)
 
 ## 1. Query total number of listings
