@@ -97,4 +97,5 @@ class Kinnisvara24Parser:
             street_with_building += ' ' + address_json['A7']
 
         apartment_number = address_json['A8']
+        apartment_number = apartment_number if apartment_number and apartment_number.strip() else None
         return AddressComponents(city, street_with_building, apartment_number)
