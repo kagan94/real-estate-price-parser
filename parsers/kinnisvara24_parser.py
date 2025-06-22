@@ -4,7 +4,7 @@ from typing import List, Optional
 import requests
 
 from config import KINNISVARA24_API_SEARCH_URL, KINNISVARA24_API_PAYLOAD
-from .common import ListingBase
+from .common import ListingBase, AddressComponents
 
 
 @dataclass
@@ -54,6 +54,7 @@ class Kinnisvara24Parser:
         obj_id = apartment.get('id')
         link = apartment.get('permalink')
         address = self.parse_address(apartment)
+        address_components = self.parse_address_components(apartment['address'])
         price = apartment.get('hind')
         price_m2 = apartment.get('price_per_m2')
         area_m2 = apartment.get('area')
@@ -65,6 +66,9 @@ class Kinnisvara24Parser:
         listing = Kinnisvara24Listing(
             id=obj_id,
             address=address,
+            city=address_components.city,
+            street_with_building=address_components.street_with_building,
+            apartment_number=address_components.apartment_number,
             rooms=rooms,
             area_m2=area_m2,
             price=price,
@@ -81,3 +85,16 @@ class Kinnisvara24Parser:
         if address['address']:
             return address['address']
         return address['short_address']
+
+    def parse_address_components(self, address_json: dict):
+        """Parse address into street_with_building, apartment_number, and city."""
+        if not address_json:
+            return AddressComponents(None, None, None)
+        city = address_json['A2']
+
+        street_with_building = address_json['A5']
+        if address_json['A7']:
+            street_with_building += ' ' + address_json['A7']
+
+        apartment_number = address_json['A8']
+        return AddressComponents(city, street_with_building, apartment_number)
