@@ -10,7 +10,7 @@ Application is parsing and storing real estate prices from main Estonian real es
 
 The goal is to validate and find apartments which are posted not all portals. For example, apartment has listing on city24.ee, but not on kv.ee.
 
-The motivation behind this experiment is to check if there are some mispriced apartments which are posted only on 1 portal.   
+The motivation behind this experiment is to check if there are some mispriced apartments (possibly, by apartment owners, or maklers that try to save on advertising) which are posted only on 1 portal.   
 
 ## Features
 
@@ -55,15 +55,15 @@ python run_tests.py
 ## Data example
 
 ### Kv.ee
-[All kv.ee listings (as of 2024/06/23).csv](documentation/data/csv/all_kvee_listings.csv)
+[All kv.ee listings (as of 2025/06/23).csv](documentation/data/csv/all_kvee_listings.csv)
 ![img.png](documentation/data/kvee.png)
 
 ### City24.ee
-[All city24.ee listings (as of 2024/06/23).csv](documentation/data/csv/all_city24_listings.csv)
+[All city24.ee listings (as of 2025/06/23).csv](documentation/data/csv/all_city24_listings.csv)
 ![img.png](documentation/data/city24.png)
 
 ### Kinnisvara24.ee
-[All kinnisvara24.ee listings (as of 2024/06/23).csv](documentation/data/csv/all_kinnisvara24_listings.csv)
+[All kinnisvara24.ee listings (as of 2025/06/23).csv](documentation/data/csv/all_kinnisvara24_listings.csv)
 ![img.png](documentation/data/kinnisvara24.png)
 
 # Data validation (for Tallinn apartment prices only)
@@ -99,12 +99,15 @@ where not exists(
           REPLACE(REPLACE(k24.street_with_building, ' tn', ''), ' mnt', '')
 );
 ```
-<small>* NB: we don't join data by "apartment number" because on some portals it's present, on some it's not. We simplified the validation request to check only by city, street, and building number.</small>  
-**Result**: 328.
+NB: we don't join data by "apartment number" because on some portals apartment number's present, on some portals it's not. We simplified the validation request to check only by city, street, and building number.
+
+**Result**: 328 listings.  
+[Results.csv](documentation/data/csv/find_listings_present_on_kinnisvara24_and_missing_on_kvee.csv) (as of 2025/06/23)
 
 ### 2.2. Find listings on "city24.ee" which are not present on "kv.ee"
 ```
-select count(1)
+select city24.*,
+       CONCAT('https://www.google.com/maps/dir//', latitude, ',', longitude, '/@', latitude, ',', longitude, ',15z/data=!4m2!4m1!3e0?entry=ttu') AS map_link
 from city24_listing city24
 where not exists(
     select 1
@@ -117,9 +120,16 @@ where not exists(
 --       and (
 --         (city24.apartment_number is null and kv.apartment_number is null)
 --             or (city24.apartment_number is not null and city24.apartment_number = kv.apartment_number)
---         )
+--       )
 );
 ```
-**Result**: 434.
+**Result**: 434 listings.  
+[Results.csv](documentation/data/csv/find_listings_present_on_city24_and_missing_on_kvee.csv) (as of 2025/06/23)
+
 
 # Summary
+We detected listings which are present only on one portal that are not present on another portal:
+- 328 (out from 4242) apartments are listed on [city24.ee](https://www.city24.ee) which are not present on [kv.ee](https://www.kv.ee). [Results.csv](documentation/data/csv/find_listings_present_on_kinnisvara24_and_missing_on_kvee.csv)
+- 434 (out from 3221) apartments are listed on [kinnisvara24.ee](https://kinnisvara24.ee) which are not present on [kv.ee](https://www.kv.ee).
+
+However, we couldn't find mispriced opportunities which we were expected to find in such listings, these listings are more-less align with market value.
