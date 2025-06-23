@@ -54,13 +54,16 @@ python run_tests.py
 
 ## Data example
 
-### kv.ee
+### Kv.ee
+[All kv.ee listings (as of 2024/06/23).csv](documentation/data/csv/all_kvee_listings.csv)
 ![img.png](documentation/data/kvee.png)
 
-### city24.ee
+### City24.ee
+[All city24.ee listings (as of 2024/06/23).csv](documentation/data/csv/all_city24_listings.csv)
 ![img.png](documentation/data/city24.png)
 
-### kinnisvara24.ee
+### Kinnisvara24.ee
+[All kinnisvara24.ee listings (as of 2024/06/23).csv](documentation/data/csv/all_kinnisvara24_listings.csv)
 ![img.png](documentation/data/kinnisvara24.png)
 
 # Data validation (for Tallinn apartment prices only)
@@ -118,3 +121,5 @@ where not exists(
 );
 ```
 **Result**: 434.
+
+# Summary
